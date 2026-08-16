@@ -8,14 +8,6 @@
 #include "raylib.h"
 #include "raymath.h"
 
-typedef struct Toggle {
-    bool* value;
-    int x;
-    int y;
-    int width;
-    int height;
-} Toggle;
-
 typedef struct Slider {
     float* value;
     float min;
@@ -26,6 +18,113 @@ typedef struct Slider {
     int height;
     bool update;
 } Slider;
+
+typedef struct Toggle {
+    bool* value;
+    int x;
+    int y;
+    int width;
+    int height;
+} Toggle;
+
+typedef struct Button {
+    bool* value;
+    int x;
+    int y;
+    int width;
+    int height;
+} Button;
+
+/****************************************************************/
+// Button
+/****************************************************************/
+
+Button* gummygui_button_create(bool* Value, const int X, const int Y, const int Width, const int Height)
+{
+    Button* button = malloc(sizeof (Toggle));
+    if (button == NULL) return NULL;
+
+    button->value = Value;
+    button->x = X;
+    button->y = Y;
+    button->width = Width;
+    button->height = Height;
+
+    return button;
+}
+
+void gummygui_button_destroy(Button** button)
+{
+    free(*button);
+    *button = NULL;
+}
+
+void gummygui_button_update(Button* button)
+{
+    const int mouse_x = GetMouseX();
+    const int mouse_y = GetMouseY();
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !(mouse_x < button->x || mouse_x > button->x + button->width || mouse_y < button->y || mouse_y > button->y + button->height))
+        *button->value = !(*button->value);
+}
+
+void gummygui_button_draw(const Button* button, const Color base)
+{
+    // base
+    DrawRectangle(button->x, button->y, button->width, button->height, base);
+}
+
+/****************************************************************/
+
+bool gummygui_button_get_value(const Button* button) {
+    return *button->value;
+}
+
+bool* gummygui_button_get_value_addr(const Button* button) {
+    return button->value;
+}
+
+int gummygui_button_get_x(const Button* button) {
+    return button->x;
+}
+
+int gummygui_button_get_y(const Button* button) {
+    return button->y;
+}
+
+int gummygui_button_get_width(const Button* button) {
+    return button->width;
+}
+
+int gummygui_button_get_height(const Button* button) {
+    return button->height;
+}
+
+/****************************************************************/
+
+void gummygui_button_set_value(Button* button, const bool new_val) {
+    *button->value = new_val;
+}
+
+void gummygui_button_set_value_addr(Button* button, bool* new_addr) {
+    button->value = new_addr;
+}
+
+void gummygui_button_set_x(Button* button, const int new_x) {
+    button->x = new_x;
+}
+
+void gummygui_button_set_y(Button* button, const int new_y) {
+    button->y = new_y;
+}
+
+void gummygui_button_set_width(Button* button, const int new_width) {
+    button->width = new_width;
+}
+
+void gummygui_button_set_height(Button* button, const int new_height) {
+    button->height = new_height;
+}
 
 
 /****************************************************************/
@@ -165,7 +264,7 @@ Slider* gummygui_slider_create(float* Value, const float Min, const float Max, c
     slider->x = X;
     slider->y = Y;
     slider->width = Width;
-    slider->height = Width * 0.08;
+    slider->height = (int)(Width * 0.08);
 
     slider->update = false;
 

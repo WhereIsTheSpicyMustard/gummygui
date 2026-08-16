@@ -17,25 +17,29 @@ int main(void)
 
     InitWindow(WINDOW_WIDTH,WINDOW_HEIGHT, "GUI Test");
 
-    float val1 = 0;
-    bool val2 = 0;
+    float slider_val = 0;
+    bool toggle_val = false;
+    bool button_val = false;
 
-    Slider* slider = gummygui_slider_create(&val1, 0, 255, 50, 50, 400);
-    Toggle* toggle = gummygui_toggle_create(&val2, 50, 100, 50);
+    Slider* slider = gummygui_slider_create(&slider_val, 0, 255, 50, 50, 400);
+    Toggle* toggle = gummygui_toggle_create(&toggle_val, 50, 100, 50);
+    Button* button = gummygui_button_create(&button_val, 50, 150, 30, 60);
 
     if (slider == NULL || toggle ==  NULL) goto CLEANUP;
 
     while (!WindowShouldClose()) {
         gummygui_slider_update(slider);
         gummygui_toggle_update(toggle);
+        gummygui_button_update(button);
 
-        Color slider_color = {255 * val2, val1, 200, 255};
+        Color slider_color = {255 * toggle_val, slider_val, 200, 255};
 
         BeginDrawing();
         ClearBackground(slider_color);
 
         gummygui_slider_draw(slider, slider_color, BLACK);
         gummygui_toggle_draw(toggle, slider_color, BLACK);
+        gummygui_button_draw(button, (Color){255 * button_val, 255 * button_val, 255 * button_val, 255});
 
         EndDrawing();
     }
@@ -43,6 +47,7 @@ int main(void)
 CLEANUP:
     gummygui_slider_destroy(&slider);
     gummygui_toggle_destroy(&toggle);
+    gummygui_button_destroy(&button);
     CloseWindow();
     return 0;
 }

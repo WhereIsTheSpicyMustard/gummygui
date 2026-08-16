@@ -10,6 +10,28 @@
 typedef struct Color Color;
 typedef struct Slider Slider;
 typedef struct Toggle Toggle;
+typedef struct Button Button;
+
+/************************ Button ************************/
+
+Button* gummygui_button_create(bool* Value, const int X, const int Y, const int Width, const int Height);
+void    gummygui_button_destroy(Button** button);
+void    gummygui_button_update(Button* button);
+void    gummygui_button_draw(const Button* button, const Color base);
+
+bool    gummygui_button_get_value(const Button* button);
+bool*   gummygui_button_get_value_addr(const Button* button);
+int     gummygui_button_get_x(const Button* button);
+int     gummygui_button_get_y(const Button* button);
+int     gummygui_button_get_width(const Button* button);
+int     gummygui_button_get_height(const Button* button);
+
+void    gummygui_button_set_value(Button* button, const bool new_val);
+void    gummygui_button_set_value_addr(Button* button, bool* new_addr);
+void    gummygui_button_set_x(Button* button, const int new_x);
+void    gummygui_button_set_y(Button* button, const int new_y);
+void    gummygui_button_set_width(Button* button, const int new_width);
+void    gummygui_button_set_height(Button* button, const int new_height);
 
 /************************ Toggle ************************/
 

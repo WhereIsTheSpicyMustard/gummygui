@@ -6,7 +6,6 @@ The use is mainly for myself so that I can just copy and paste the files into a 
 
 ### TODO
 - Vertical Sliders
-- Buttons (similar to toggles)
 - Drop-down menu selection
 - A way to minimize / hide gui elements, either with a keyboard shortcut or another gui element
 - A better way to handle names of elements
