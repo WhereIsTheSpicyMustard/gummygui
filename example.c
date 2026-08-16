@@ -8,14 +8,10 @@ gcc -O2 -Wall -Wextra -Wpedantic *.c -o main $(pkg-config --cflags --libs raylib
 #include "gui.h"
 #include "raylib.h"
 
-static const int WINDOW_WIDTH = 800;
-static const int WINDOW_HEIGHT = 800;
-
 int main(void)
 {
-
-
-    InitWindow(WINDOW_WIDTH,WINDOW_HEIGHT, "GUI Test");
+    InitWindow(800, 800, "GUI Test");
+    SetTargetFPS(60);
 
     float slider_val = 0;
     bool toggle_val = false;
@@ -51,3 +47,23 @@ CLEANUP:
     CloseWindow();
     return 0;
 }
+
+
+
+
+/*
+ gcc -std=c11 \
+ -Wall -Wextra -Wpedantic \
+ -Wshadow -Wconversion -Wsign-conversion \
+ -Wdouble-promotion -Wformat=2 -Wnull-dereference \
+ -Wcast-align -Wcast-qual -Wundef -Wpointer-arith \
+ -Wunused -Wuninitialized  \
+ -Wredundant-decls -Wmisleading-indentation \
+ -Wduplicated-cond -Wduplicated-branches -Wlogical-op \
+ -g -O0 \
+ -fsanitize=address,undefined \
+ -fno-omit-frame-pointer \
+ -fno-sanitize-recover=all \
+ -o main *.c $(pkg-config --cflags --libs raylib) -lm
+*/
+
