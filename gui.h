@@ -12,6 +12,7 @@ typedef struct Slider Slider;
 typedef struct Toggle Toggle;
 
 /************************ Toggle ************************/
+
 Toggle* gummygui_toggle_create(bool* Value, const int X, const int Y, const int Width);
 void    gummygui_toggle_destroy(Toggle** toggle);
 void    gummygui_toggle_update(Toggle* toggle);
@@ -34,7 +35,7 @@ void    gummygui_toggle_set_height(Toggle* toggle, const int new_height);
 
 /************************ Slider ************************/
 
-Slider* gummygui_slider_create(const char* Name, float* Value, const float Min, const float Max, const int X, const int Y, const int Width, const int Height, const char* Prec);
+Slider* gummygui_slider_create(float* Value, const float Min, const float Max, const int X, const int Y, const int Width);
 void    gummygui_slider_destroy(Slider** slider);
 void    gummygui_slider_update(Slider* slider);
 void    gummygui_slider_draw(const Slider* slider, const Color base, const Color outline);
@@ -48,8 +49,6 @@ int     gummygui_slider_get_y(const Slider* slider);
 int     gummygui_slider_get_width(const Slider* slider);
 int     gummygui_slider_get_height(const Slider* slider);
 
-void    gummygui_slider_set_name(Slider* slider, const char* new_name);
-void    gummygui_slider_set_prec(Slider* slider, const char* new_prec);
 void    gummygui_slider_set_value(Slider* slider, const float new_value);
 void    gummygui_slider_set_value_addr(Slider* slider, float* new_addr);
 void    gummygui_slider_set_max(Slider* slider, const float new_max);

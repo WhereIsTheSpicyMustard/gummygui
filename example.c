@@ -17,28 +17,30 @@ int main(void)
 
     InitWindow(WINDOW_WIDTH,WINDOW_HEIGHT, "GUI Test");
 
-    float val = 0;
+    float val1 = 0;
     bool val2 = 0;
 
-
-    Slider* slider = gummygui_slider_create("Slider", &val, 0, 15, 50, 50, 400, 20, "%.3f");
+    Slider* slider = gummygui_slider_create(&val1, 0, 255, 50, 50, 400);
     Toggle* toggle = gummygui_toggle_create(&val2, 50, 100, 50);
 
+    if (slider == NULL || toggle ==  NULL) goto CLEANUP;
 
     while (!WindowShouldClose()) {
         gummygui_slider_update(slider);
         gummygui_toggle_update(toggle);
 
+        Color slider_color = {255 * val2, val1, 200, 255};
 
         BeginDrawing();
-        ClearBackground(BEIGE);
+        ClearBackground(slider_color);
 
-        gummygui_slider_draw(slider, BEIGE, BLACK);
-        gummygui_toggle_draw(toggle, BEIGE, BLACK);
+        gummygui_slider_draw(slider, slider_color, BLACK);
+        gummygui_toggle_draw(toggle, slider_color, BLACK);
 
         EndDrawing();
     }
 
+CLEANUP:
     gummygui_slider_destroy(&slider);
     gummygui_toggle_destroy(&toggle);
     CloseWindow();

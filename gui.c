@@ -17,7 +17,6 @@ typedef struct Toggle {
 } Toggle;
 
 typedef struct Slider {
-    const char* name;
     float* value;
     float min;
     float max;
@@ -25,7 +24,6 @@ typedef struct Slider {
     int y;
     int width;
     int height;
-    const char* prec;
     bool update;
 } Slider;
 
@@ -155,16 +153,10 @@ void gummygui_toggle_set_height(Toggle* toggle, const int new_height) {
 // SLIDER
 /****************************************************************/
 
-Slider* gummygui_slider_create(
-    const char* Name,
-    float* Value, const float Min, const float Max,
-    const int X, const int Y, const int Width, const int Height,
-    const char* Prec)
+Slider* gummygui_slider_create(float* Value, const float Min, const float Max, const int X, const int Y, const int Width)
 {
     Slider* slider = malloc(sizeof(Slider));
     if (slider == NULL) return NULL;
-
-    slider->name = Name; // assumes n is a string literal
 
     slider->value = Value;
     slider->min = Min;
@@ -173,9 +165,7 @@ Slider* gummygui_slider_create(
     slider->x = X;
     slider->y = Y;
     slider->width = Width;
-    slider->height = Height;
-
-    slider->prec = Prec; // assumes p is a string literal
+    slider->height = Width * 0.08;
 
     slider->update = false;
 
@@ -209,7 +199,7 @@ void gummygui_slider_update(Slider* slider)
 
 void gummygui_slider_draw(const Slider* slider, const Color base, const Color outline)
 {
-    const char* const text = TextFormat(slider->prec, (double)*slider->value);
+    // const char* const text = TextFormat(slider->prec, (double)*slider->value);
     const int knob_x = (int)Remap(
         *slider->value,
         slider->min,
@@ -240,19 +230,19 @@ void gummygui_slider_draw(const Slider* slider, const Color base, const Color ou
         outline
     );
 
-    // name
-    DrawText(
-        slider->name, slider->x,
-        slider->y - slider->height - GUMMYGUI_PADDING,
-        slider->height, outline
-    );
-
-    // value
-    DrawText(
-        text, slider->x + slider->width - MeasureText(text, slider->height),
-        slider->y - slider->height - GUMMYGUI_PADDING,
-        slider->height, outline
-    );
+    // // name
+    // DrawText(
+    //     slider->name, slider->x,
+    //     slider->y - slider->height - GUMMYGUI_PADDING,
+    //     slider->height, outline
+    // );
+    //
+    // // value
+    // DrawText(
+    //     text, slider->x + slider->width - MeasureText(text, slider->height),
+    //     slider->y - slider->height - GUMMYGUI_PADDING,
+    //     slider->height, outline
+    // );
 }
 
 /****************************************************************/
@@ -290,14 +280,6 @@ int gummygui_slider_get_height(const Slider* slider) {
 }
 
 /****************************************************************/
-
-void gummygui_slider_set_name(Slider* slider, const char* new_name) {
-    slider->name = new_name;
-}
-
-void gummygui_slider_set_prec(Slider* slider, const char* new_prec) {
-    slider->prec = new_prec;
-}
 
 void gummygui_slider_set_value(Slider* slider, const float new_value) {
     *slider->value = new_value;
