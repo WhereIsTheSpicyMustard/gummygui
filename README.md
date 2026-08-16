@@ -8,3 +8,5 @@ The use is mainly for myself so that I can just copy and paste the files into a 
 - Drop-down menu selection
 - A way to minimize / hide gui elements, either with a keyboard shortcut or another gui element
 - A better way to handle names of elements
+
+This library depends on the raylib graphics library: https://github.com/raysan5/raylib
