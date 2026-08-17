@@ -9,6 +9,7 @@ The use is mainly for myself so that I can just copy and paste the files into a 
 - Drop-down menu selection
 - A way to minimize / hide gui elements, either with a keyboard shortcut or another gui element
 - Context for storing many UI elements.
+
 This library depends on, and is meant to be used in conjunction with, raylib, a graphics library from Ramon Santamaria.
 
 Link: https://github.com/raysan5/raylib
