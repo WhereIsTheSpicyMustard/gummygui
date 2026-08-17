@@ -5,7 +5,7 @@ gcc -O2 -Wall -Wextra -Wpedantic *.c -o main $(pkg-config --cflags --libs raylib
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "gui.h"
+#include "gummygui.h"
 #include "raylib.h"
 
 int main(void)
@@ -20,6 +20,7 @@ int main(void)
     Slider* slider = gummygui_slider_create(&slider_val, 0, 255, 50, 50, 400);
     Toggle* toggle = gummygui_toggle_create(&toggle_val, 50, 100, 50);
     Button* button = gummygui_button_create(&button_val, 50, 150, 30, 60);
+    Label* label = gummygui_label_slider_create(slider, ALIGN_TOP, '2');
 
     if (slider == NULL || toggle ==  NULL) goto CLEANUP;
 
@@ -28,7 +29,7 @@ int main(void)
         gummygui_toggle_update(toggle);
         gummygui_button_update(button);
 
-        Color slider_color = {255 * toggle_val, slider_val, 200, 255};
+        Color slider_color = {255 * toggle_val, (unsigned char)slider_val, 200, 255};
 
         BeginDrawing();
         ClearBackground(slider_color);
@@ -36,6 +37,7 @@ int main(void)
         gummygui_slider_draw(slider, slider_color, BLACK);
         gummygui_toggle_draw(toggle, slider_color, BLACK);
         gummygui_button_draw(button, (Color){255 * button_val, 255 * button_val, 255 * button_val, 255});
+        gummygui_label_draw(label, RED);
 
         EndDrawing();
     }
@@ -44,6 +46,7 @@ CLEANUP:
     gummygui_slider_destroy(&slider);
     gummygui_toggle_destroy(&toggle);
     gummygui_button_destroy(&button);
+    gummygui_label_destroy(&label);
     CloseWindow();
     return 0;
 }

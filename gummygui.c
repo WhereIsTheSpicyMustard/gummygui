@@ -1,4 +1,4 @@
-#include "gui.h"
+#include "gummygui.h"
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -39,6 +39,143 @@ typedef struct Button {
     int height;
 } Button;
 
+typedef struct Label {
+    float* data;
+    int x;
+    int y;
+    int size;
+    char prec;
+} Label;
+
+typedef struct TextLabel {
+    char* data;
+    int x;
+    int y;
+    int size;
+} TextLabel;
+
+/****************************************************************/
+// Label
+/****************************************************************/
+
+Label* gummygui_label_create(float* Data, const int X, const int Y, const int Size, const char Prec)
+{
+    VERIFY(Data == NULL, NULL);
+    Label* label = malloc(sizeof(Label));
+    VERIFY(label == NULL, NULL);
+
+    label->data = Data;
+    label->prec = Prec;
+    label->size = Size;
+    label->x = X;
+    label->y = Y;
+
+    return label;
+}
+
+Label* gummygui_label_slider_create(const Slider* slider, const Alignment a, const char Prec)
+{
+    VERIFY(slider == NULL, NULL);
+    Label* label = malloc(sizeof(Label));
+    VERIFY(label == NULL, NULL);
+
+    label->data = slider->value;
+    label->prec = Prec;
+    label->size = slider->height;
+
+    switch (a) {
+        case ALIGN_TOP:
+            label->x = (int)(slider->x); label->y = slider->y - slider->height - 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_BOTTOM:
+            label->x = (int)(slider->x); label->y = slider->y + slider->height + 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_RIGHT:
+            label->x = (int)(slider->x + slider->width + 2 * GUMMYGUI_PADDING); label->y = slider->y; break;
+        case ALIGN_CENTER:
+            label->x = (int)(slider->x); label->y = slider->y; break;
+    }
+
+    return label;
+}
+
+void gummygui_label_destroy(Label** label)
+{
+    free(*label);
+    *label = NULL;
+}
+
+void gummygui_label_draw(const Label* label, Color base)
+{
+    VERIFY_VOID(label == NULL);
+    char format[6] = {'%', '.', '0', label->prec, 'f', '\0'};
+    DrawText(TextFormat(format, (double)*(label->data)), label->x + 3 * GUMMYGUI_PADDING, label->y, label->size, base);
+}
+
+/****************************************************************/
+
+float* gummygui_label_get_data(const Label* label)
+{
+    VERIFY(label == NULL, NULL);
+    return label->data;
+}
+
+int gummygui_label_get_x(const Label* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->x;
+}
+
+int gummygui_label_get_y(const Label* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->y;
+}
+
+int gummygui_label_get_size(const Label* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->size;
+}
+
+char gummygui_label_get_prec(const Label* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->prec;
+}
+
+/****************************************************************/
+
+void gummygui_label_set_data(Label* label, float* new_data)
+{
+    VERIFY_VOID(label == NULL || new_data == NULL);
+    label->data = new_data;
+}
+
+void gummygui_label_set_x(Label* label, const int new_x)
+{
+    VERIFY_VOID(label == NULL);
+    label->x = new_x;
+}
+
+void gummygui_label_set_y(Label* label, const int new_y)
+{
+    VERIFY_VOID(label == NULL);
+    label->y = new_y;
+}
+
+void gummygui_label_set_size(Label* label, const int new_size)
+{
+    VERIFY_VOID(label == NULL);
+    label->size = new_size;
+}
+
+void gummygui_label_set_prec(Label* label, const char new_prec)
+{
+    VERIFY_VOID(label == NULL);
+    label->prec = new_prec;
+}
+
+// const char* const text = TextFormat(slider->prec, (double)*slider->value);
+
 /****************************************************************/
 // Button
 /****************************************************************/
@@ -46,7 +183,7 @@ typedef struct Button {
 Button* gummygui_button_create(bool* Value, const int X, const int Y, const int Width, const int Height)
 {
     VERIFY(Value == NULL, NULL);
-    Button* button = malloc(sizeof (Toggle));
+    Button* button = malloc(sizeof(Button));
     VERIFY(button == NULL, NULL);
 
     button->value = Value;
@@ -82,13 +219,7 @@ void gummygui_button_draw(const Button* button, const Color base)
 
 /****************************************************************/
 
-bool gummygui_button_get_value(const Button* button)
-{
-    VERIFY(button == NULL, false);
-    return *button->value;
-}
-
-bool* gummygui_button_get_value_addr(const Button* button)
+bool* gummygui_button_get_value(const Button* button)
 {
     VERIFY(button == NULL, NULL);
     return button->value;
@@ -120,16 +251,10 @@ int gummygui_button_get_height(const Button* button)
 
 /****************************************************************/
 
-void gummygui_button_set_value(Button* button, const bool new_val)
+void gummygui_button_set_value(Button* button, bool* new_value)
 {
-    VERIFY_VOID(button == NULL);
-    *button->value = new_val;
-}
-
-void gummygui_button_set_value_addr(Button* button, bool* new_addr)
-{
-    VERIFY_VOID(button == NULL || new_addr == NULL);
-    button->value = new_addr;
+    VERIFY_VOID(button == NULL || new_value == NULL);
+    button->value = new_value;
 }
 
 void gummygui_button_set_x(Button* button, const int new_x)
@@ -164,7 +289,7 @@ void gummygui_button_set_height(Button* button, const int new_height)
 Toggle* gummygui_toggle_create(bool* Value, const int X, const int Y, const int Width)
 {
     VERIFY(Value == NULL, NULL);
-    Toggle* toggle = malloc(sizeof (Toggle));
+    Toggle* toggle = malloc(sizeof(Toggle));
     VERIFY(toggle == NULL, NULL);
 
     toggle->value = Value;
@@ -229,13 +354,7 @@ void gummygui_toggle_draw(const Toggle* toggle, const Color base, const Color ou
 
 /****************************************************************/
 
-bool gummygui_toggle_get_value(const Toggle* toggle)
-{
-    VERIFY(toggle == NULL, false);
-    return *toggle->value;
-}
-
-bool* gummygui_toggle_get_value_addr(const Toggle* toggle)
+bool* gummygui_toggle_get_value(const Toggle* toggle)
 {
     VERIFY(toggle == NULL, NULL);
     return toggle->value;
@@ -267,16 +386,10 @@ int gummygui_toggle_get_height(const Toggle* toggle)
 
 /****************************************************************/
 
-void gummygui_toggle_set_value(Toggle* toggle, const bool new_val)
+void gummygui_toggle_set_value(Toggle* toggle, bool* new_value)
 {
-    VERIFY_VOID(toggle == NULL);
-    *toggle->value = new_val;
-}
-
-void gummygui_toggle_set_value_addr(Toggle* toggle, bool* new_addr)
-{
-    VERIFY_VOID(toggle == NULL || new_addr == NULL);
-    toggle->value = new_addr;
+    VERIFY_VOID(toggle == NULL || new_value == NULL);
+    toggle->value = new_value;
 }
 
 void gummygui_toggle_set_x(Toggle* toggle, const int new_x)
@@ -358,7 +471,6 @@ void gummygui_slider_update(Slider* slider)
 void gummygui_slider_draw(const Slider* slider, const Color base, const Color outline)
 {
     VERIFY_VOID(slider == NULL);
-    // const char* const text = TextFormat(slider->prec, (double)*slider->value);
     const int knob_x = (int)Remap(
         *slider->value,
         slider->min,
@@ -369,6 +481,7 @@ void gummygui_slider_draw(const Slider* slider, const Color base, const Color ou
 
     // base
     DrawRectangle(slider->x, slider->y, slider->width, slider->height, base);
+
     // outline
     DrawRectangleLinesEx(
         (Rectangle){
@@ -392,13 +505,7 @@ void gummygui_slider_draw(const Slider* slider, const Color base, const Color ou
 
 /****************************************************************/
 
-float gummygui_slider_get_value(const Slider* slider)
-{
-    VERIFY(slider == NULL, 0);
-    return *slider->value;
-}
-
-float* gummygui_slider_get_value_addr(const Slider* slider)
+float* gummygui_slider_get_value(const Slider* slider)
 {
     VERIFY(slider == NULL, NULL);
     return slider->value;
@@ -442,16 +549,10 @@ int gummygui_slider_get_height(const Slider* slider)
 
 /****************************************************************/
 
-void gummygui_slider_set_value(Slider* slider, const float new_value)
+void gummygui_slider_set_value(Slider* slider, float* new_value)
 {
-    VERIFY_VOID(slider == NULL);
-    *slider->value = new_value;
-}
-
-void gummygui_slider_set_value_addr(Slider* slider, float* new_addr)
-{
-    VERIFY_VOID(slider == NULL || new_addr == NULL);
-    slider->value = new_addr;
+    VERIFY_VOID(slider == NULL || new_value == NULL);
+    slider->value = new_value;
 }
 
 void gummygui_slider_set_max(Slider* slider, const float new_max)
