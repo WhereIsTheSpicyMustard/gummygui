@@ -17,10 +17,11 @@ int main(void)
     bool toggle_val = false;
     bool button_val = false;
 
-    Slider* slider = gummygui_slider_create(&slider_val, 0, 255, 50, 50, 400);
+    Slider* slider = gummygui_slider_create(&slider_val, 0, 255, 50, 400, 400);
     Toggle* toggle = gummygui_toggle_create(&toggle_val, 50, 100, 50);
     Button* button = gummygui_button_create(&button_val, 50, 150, 30, 60);
     Label* label = gummygui_label_slider_create(slider, ALIGN_TOP, '2');
+    TextLabel* tlabel = gummygui_textlabel_toggle_create("Some Text", toggle, ALIGN_TOP);
 
     if (slider == NULL || toggle ==  NULL) goto CLEANUP;
 
@@ -38,6 +39,7 @@ int main(void)
         gummygui_toggle_draw(toggle, slider_color, BLACK);
         gummygui_button_draw(button, (Color){255 * button_val, 255 * button_val, 255 * button_val, 255});
         gummygui_label_draw(label, RED);
+        gummygui_textlabel_draw(tlabel, PURPLE);
 
         EndDrawing();
     }
@@ -47,6 +49,7 @@ CLEANUP:
     gummygui_toggle_destroy(&toggle);
     gummygui_button_destroy(&button);
     gummygui_label_destroy(&label);
+    gummygui_textlabel_destroy(&tlabel);
     CloseWindow();
     return 0;
 }

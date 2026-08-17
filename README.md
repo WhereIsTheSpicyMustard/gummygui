@@ -1,7 +1,5 @@
 This is my personal GUI library I'm currently developing.
 
-The main philosophy of this library is to avoid unnecessary abstraction and minimize boilerplate code as much as possible.
-
 The use is mainly for myself so that I can just copy and paste the files into a raylib project I'm working on.
 
 ### TODO

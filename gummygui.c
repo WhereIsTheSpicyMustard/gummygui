@@ -48,11 +48,162 @@ typedef struct Label {
 } Label;
 
 typedef struct TextLabel {
-    char* data;
+    char* text;
     int x;
     int y;
     int size;
 } TextLabel;
+
+/****************************************************************/
+// Text Label
+/****************************************************************/
+
+TextLabel* gummygui_textlabel_create(char* Text, const int X, const int Y, const int Size)
+{
+    VERIFY(Text == NULL, NULL);
+    TextLabel* label = malloc(sizeof(TextLabel));
+    VERIFY(label == NULL, NULL);
+
+    label->text = Text;
+    label->size = Size;
+    label->x = X;
+    label->y = Y;
+
+    return label;
+}
+
+TextLabel* gummygui_textlabel_button_create(char* Text, const Button* button, const Alignment a)
+{
+    VERIFY(button == NULL || Text == NULL, NULL);
+    TextLabel* label = malloc(sizeof(TextLabel));
+    VERIFY(label == NULL, NULL);
+
+    label->text = Text;
+    label->size = button->height < button->width ? button->height : button->width;
+
+    switch (a) {
+        case ALIGN_TOP:
+            label->x = (int)(button->x); label->y = button->y - label->size - 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_BOTTOM:
+            label->x = (int)(button->x); label->y = button->y + button->height + 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_RIGHT:
+            label->x = (int)(button->x + button->width + 2 * GUMMYGUI_PADDING); label->y = button->y; break;
+        case ALIGN_CENTER:
+            label->x = (int)(button->x); label->y = button->y; break;
+    }
+
+    return label;
+}
+
+TextLabel* gummygui_textlabel_toggle_create(char* Text, const Toggle* toggle, const Alignment a)
+{
+    VERIFY(toggle == NULL || Text == NULL, NULL);
+    TextLabel* label = malloc(sizeof(TextLabel));
+    VERIFY(label == NULL, NULL);
+
+    label->text = Text;
+    label->size = toggle->height < toggle->width ? toggle->height : toggle->width;
+
+    switch (a) {
+        case ALIGN_TOP:
+            label->x = (int)(toggle->x); label->y = toggle->y - label->size - 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_BOTTOM:
+            label->x = (int)(toggle->x); label->y = toggle->y + toggle->height + 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_RIGHT:
+            label->x = (int)(toggle->x + toggle->width + 2 * GUMMYGUI_PADDING); label->y = toggle->y; break;
+        case ALIGN_CENTER:
+            label->x = (int)(toggle->x); label->y = toggle->y; break;
+    }
+
+    return label;
+}
+
+TextLabel* gummygui_textlabel_slider_create(char* Text, const Slider* slider, const Alignment a)
+{
+    VERIFY(slider == NULL || Text == NULL, NULL);
+    TextLabel* label = malloc(sizeof(TextLabel));
+    VERIFY(label == NULL, NULL);
+
+    label->text = Text;
+    label->size = slider->height;
+
+    switch (a) {
+        case ALIGN_TOP:
+            label->x = (int)(slider->x); label->y = slider->y - slider->height - 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_BOTTOM:
+            label->x = (int)(slider->x); label->y = slider->y + slider->height + 2 * GUMMYGUI_PADDING; break;
+        case ALIGN_RIGHT:
+            label->x = (int)(slider->x + slider->width + 2 * GUMMYGUI_PADDING); label->y = slider->y; break;
+        case ALIGN_CENTER:
+            label->x = (int)(slider->x); label->y = slider->y; break;
+    }
+
+    return label;
+}
+
+void gummygui_textlabel_destroy(TextLabel** label)
+{
+    free(*label);
+    *label = NULL;
+}
+
+void gummygui_textlabel_draw(const TextLabel* label, Color base)
+{
+    VERIFY_VOID(label == NULL);
+    DrawText(label->text, label->x, label->y, label->size, base);
+}
+
+/****************************************************************/
+
+char* gummygui_textlabel_get_text(const TextLabel* label)
+{
+    VERIFY(label == NULL, NULL);
+    return label->text;
+}
+
+int gummygui_textlabel_get_x(const TextLabel* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->x;
+}
+
+int gummygui_textlabel_get_y(const TextLabel* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->y;
+}
+
+int gummygui_textlabel_get_size(const TextLabel* label)
+{
+    VERIFY(label == NULL, 0);
+    return label->size;
+}
+
+/****************************************************************/
+
+void gummygui_textlabel_set_text(TextLabel* label, char* new_text)
+{
+    VERIFY_VOID(label == NULL || new_text == NULL);
+    label->text = new_text;
+}
+
+void gummygui_textlabel_set_x(TextLabel* label, const int new_x)
+{
+    VERIFY_VOID(label == NULL);
+    label->x = new_x;
+}
+
+void gummygui_textlabel_set_y(TextLabel* label, const int new_y)
+{
+    VERIFY_VOID(label == NULL);
+    label->y = new_y;
+}
+
+void gummygui_textlabel_set_size(TextLabel* label, const int new_size)
+{
+    VERIFY_VOID(label == NULL);
+    label->size = new_size;
+}
 
 /****************************************************************/
 // Label
@@ -107,7 +258,7 @@ void gummygui_label_draw(const Label* label, Color base)
 {
     VERIFY_VOID(label == NULL);
     char format[6] = {'%', '.', '0', label->prec, 'f', '\0'};
-    DrawText(TextFormat(format, (double)*(label->data)), label->x + 3 * GUMMYGUI_PADDING, label->y, label->size, base);
+    DrawText(TextFormat(format, (double)*(label->data)), label->x, label->y, label->size, base);
 }
 
 /****************************************************************/
